@@ -3,7 +3,7 @@ enum MutationTypes {
 }
 
 export type Phone = {
-    phone: boolean;
+    phone: number;
     responsible: string;
     phone_type_id: number;
 }
@@ -32,4 +32,10 @@ type MutationsType<S = PhoneState> = {
 interface PropNameKeyValue<KeyType, ValueType> {
     propName: KeyType;
     value: ValueType;
+}
+
+const actions = {
+    setStateAction({commit}: any) {
+        commit('_setState', {propName: 'phone', value: 123456789});
+    }
 }
