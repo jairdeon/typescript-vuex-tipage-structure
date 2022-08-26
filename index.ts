@@ -6,8 +6,8 @@ export const state: State = {
     test: true
 }
 
-function setState(state: State, value: boolean) {
-    state['test'] = value;
+function setState<T, K extends keyof T>(state: T, key: K, value: T[K]) {
+    return state[key] = value;
 }
 
-setState(state, true);
+setState(state, 'test', true);
