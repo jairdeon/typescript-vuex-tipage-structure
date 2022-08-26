@@ -1,12 +1,9 @@
-// O enum MutationTypes, será utilizado para que ao chamar a constante mutations, seja possível atribuir de forma dinâmica
-// então utilizar [MutationTypes.setState] como nome da função, será o mesmo que chamar a função _setState
-// O tipo MutationType espera receber uma função com o nome _setState, e ao utilizar o enum MutationTypes.setState, será identificado como _setState, então será válido
 enum MutationTypes {
     setState = "_setState"
 }
 
 export type Phone = {
-    phone: boolean;
+    phone: number;
     responsible: string;
     phone_type_id: number;
 }
@@ -35,4 +32,17 @@ type MutationsType<S = PhoneState> = {
 interface PropNameKeyValue<KeyType, ValueType> {
     propName: KeyType;
     value: ValueType;
+}
+
+// A constante actions, será um objeto que terá a permissão de acessar a mutation setState por meio da função setStateAction
+// Por enquanto, ela não possui um retorno definido, e sua função setStateAction, espera receber um parâmetro do tipo commit, que será a função
+// responsável por acessar a mutation setState e passar os parâmetros necessários para realizar a alteração dos seus valores
+const actions = {
+    // A função setStateAction, por enquanto aguarda receber um parâmetro chamado commit, mas sem instruções definidas
+    setStateAction({commit}: any) {
+        // A função commit, estará enviando para a mutanção '_setState', dois parâmetros:
+        // propName: 'phone', que será o nome da propriedade que será alterada
+        // value: '123456789', que será o novo valor atribuído a propriedade
+        commit('_setState', {propName: 'phone', value: 123456789});
+    }
 }
