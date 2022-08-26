@@ -4,7 +4,7 @@ enum MutationTypes {
     setState = "_setState"
 }
 
-type Phone = {
+export type Phone = {
     phone: number;
     responsible: string;
     phone_type_id: number;
