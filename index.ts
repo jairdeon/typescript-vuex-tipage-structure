@@ -6,8 +6,14 @@ export const state: State = {
     test: true
 }
 
-function setState<T, K extends keyof T>(state: T, key: K, value: T[K]) {
-    return state[key] = value;
+function  _setState<T, K extends keyof T>(state: T, key: K, value: T[K]){
+    state[key] = value;
 }
 
-setState(state, 'test', true);
+_setState(state, 'test', true);
+
+function actionState<T, K extends keyof T>(state: T, key: K, value: T[K]) {
+    _setState(state, key, value);
+}
+
+actionState(state, 'test', true);
