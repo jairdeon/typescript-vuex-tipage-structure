@@ -40,6 +40,7 @@ const actions: Actions = {
     setStateAction({commit}) {
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
         commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
+        commit(MutationTypes.setState, {propName: 'phone_type_id', value: 1});
     }
 }
 
@@ -54,8 +55,8 @@ type ActionsContextParam = {
     ): ReturnType<MutationsType[Key]>;
 };
 
-type AllowedValues = {
-    propName: 'phone' | 'responsible',
+type Values<T> = T[keyof T];
 
-    value: number | string;
-}
+type AllowedValues = Values<{
+    [Prop in keyof Phone]: PropNameKeyValue<Prop, Phone[Prop]>
+}>;
