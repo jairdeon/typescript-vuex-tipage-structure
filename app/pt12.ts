@@ -38,17 +38,22 @@ interface PropNameKeyValue<KeyType, ValueType> {
 
 const actions: Actions = {
     setStateAction({commit}) {
-        // A função commit espera receber 2 parâmetros:
-        // O nome da mutação desejada (no caso abaixo, atribuído como MutationTypes.setState), que é um enum do tipo MutationTypes
-        // Um payload do tipo AllowedValues, que possui dois possíveis parâmetros
-        // // propName: o nome da propriedade que será alterada (que por enquanto permitirá apenas se o valor for 'phone')
-        // // value: o valor que será atribuído à propriedade, que por enquanto permitirá apenas se for do tipo number
+        // Todos os commits abaixo funcionarão, pois agora, a função setStateAction em seu parâmetro context
+        // espera receber um objeto do tipo ActionsContextParam, que informa em suas regras de tipagem, que a
+        // função commit, receberá 2 parâmetros no total:
+        // - o primeiro é o nome da mutação que será executada
+        // - o segundo é o payload que será passado para a mutação
 
-        // O commit abaixo funcionará porque o propName é 'phone', e o valor é do tipo número que são os tipos descritos no tipo AllowedValues
+        // Diferente da parte 11, todos os commits abaixo funcionarão, pois agora o tipo AllowedValues, é igual a um objeto do tipo Values
+        // que por sua vez, recebe um parâmetro de tipo genérico duas propriedades:
+        // a chave (Prop) do objeto que está buscando (que precisa existir no tipo Phone)
+        // e a mesma chave informada (Prop) será usada para verificar se o tipo de valor informado é compatível com o tipo do valor do objeto
+        // por meio do tipo PropNameKeyValue, que possui duas propriedades:
+        // Prop (a mesma chave informada no primeiro parâmetro do objeto Value atual
+        // O tipo do valor, informado por Phone[Prop], então se o propName é 'phone', o Values será {phone: number}
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
-
-        // O commit abaixo funcionará pois agora, o propName e o valor são descritos no tipo AllowedValues
         commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
+        commit(MutationTypes.setState, {propName: 'phone_type_id', value: 1});
     }
 }
 
@@ -57,21 +62,29 @@ interface Actions {
 }
 
 type ActionsContextParam = {
+    // A função commit retornará o tipo MutationsType[Key], caso o commit possua como mutation o valor '_setState',
+    // ele saberá por meio do tipo MutationsType, função _setState, que o seu tipo é Phone
     commit<Key extends keyof MutationsType>(
         key: Key,
-        // O payload espera receber um objeto que esteja nas opções do tipo AllowedValues
-        // Por enquanto, o payload permitirá receber apenas o propName 'phone', e o value do tipo number
+
+        // O payload, espera receber um valor do tipo AllowedValues, que por sua vez, espera que uma das chaves enviadas esteja no tipo Phone
+        // por meio do tipo PropNameKeyValue, que possui duas propriedades:
+        // Prop (a mesma chave informada no primeiro parâmetro do objeto Value atual)
+        // O tipo do valor, informado por Phone[Prop], então se o propName é 'phone', o Values será {phone: number}
         payload: AllowedValues
     ): ReturnType<MutationsType[Key]>;
 };
 
-type AllowedValues = {
-    // Pequena alteração para permitir que o propName seja 'phone' ou 'responsible'
-    // Porém, não é o ideal, pois podemos ter inúmeros tipos de propriedades que podem ser alteradas
-    propName: 'phone' | 'responsible',
+// O tipo Values, espera receber um parâmetro do tipo genérico
+// Ele será igual ao tipo genérico e o tipo de seu valor
+type Values<T> = T[keyof T];
 
-    // Pequena alteração para permitir que o value seja do tipo number ou string
-    // Porém, não é o ideal, pois podemos ter inúmeros tipos de valores que podem ser atribuídos à propriedade
-    // e cada propriedade, possui seus próprios tipos de valores
-    value: number | string;
-}
+// O tipo AllowedValues, será igual ao objeto do tipo Values, ele receberá os parâmetro enviados pela função commit (propName, value)
+// Nesse caso, se o propName for 'phone', ele verificará se este valor existe em uma das chaves do tipo Phone
+// E também, ele verificará por meio do valor encontrado, qual o tipo dele na função PropNameKeyValue, que possui duas propriedades:
+// Prop (a mesma chave informada no primeiro parâmetro do objeto Value atual (propName))
+// O tipo do valor, informado por Phone[Prop], então se o propName for 'phone', o Values será {phone: number}
+type AllowedValues = Values<{
+    // O Prop fará um loop em todas as chaves do tipo Phone, buscando pelo valor informado em commit (propName)
+    [Prop in keyof Phone]: PropNameKeyValue<Prop, Phone[Prop]>
+}>;
