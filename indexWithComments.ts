@@ -1,41 +1,53 @@
-// Agora, temos um novo tipo chamado Phone
-// O tipo phone, será um objeto
 export type Phone = {
     phone: boolean;
     responsible: string;
     phone_type_id: number;
 }
 
-// O tipo PhoneState, será um objeto que receberá em sua chave "phone"
-// um objeto do tipo Phone, ou será um objeto vazio
 type PhoneState = {
     phone: Phone | null
 }
 
-// O estado por padrão, retornará o tipo PhoneState
-// e por padrão, o valor do campo phone é null
 const state: PhoneState = {
     phone: null
 }
 
-// A constante mutations, retornará um objeto do tipo MitationsType
-// Este objeto, por padrão sabe que é do tipo PhoneState, então seu estado será do tipo PhoneState
-// Seu payload por enquanto não possui um tipo definido, então será do tipo any
+// A constante mutations, retornará o tipo MutationsType, que por padrão, sabe que o seu parâmetro
+// state é o tipo PhoneState, sendo assim, ao chamar "phone..." já será sugerido os campos disponíveis do tipo PhoneState > Phone
+// payload, espera receber dois parâmetros definidos na interface PropNameKeyValue, que são:
+// // PropName: nome da chave do tipo PhoneState
+// // Value: o valor que será atribuído ao campo da chave do tipo PhoneState, que precisará ser compatível com o tipo PhoneState[PropName]
+// // // PropName: 'responsible', Value: 'Jair Deon' | ao chamar a função _setState, será atribuído o valor 'Jair Deon' ao campo responsible
 const mutations: MutationsType = {
-    // A função _setState, recebe um objeto do tipo PhoneState, e um payload que ainda não possui um tipo definido
     _setState(state, payload) {
-        // Caso o estado possua o campo phone, e dentro deste campo (objeto) exista o campo responsible,
-        // seu valor será o valor enviado pelo parâmetro payload
-        state.phone && (state.phone.responsible = payload.value);
+        // Como o parâmetro state já sabe ser do tipo PhoneState, então, podemos acessar o campo phone
+        // e caso este campo exista, como também o campo buscado (payload.propName) = 'responsible', então estaremos acessando
+        // o campo state.phone.responsible, e atribuído o valor 'Jair Deon' do tipo string
+        state.phone && (state.phone[payload.propName] = payload.value);
     }
 }
 
-// O tipo MutationsType, por padrão recebe um tipo genérico do tipo PhoneState
-// O tipo MutationsType, será um objeto que possuirá uma função chamada _setState,
-// e essa função receberá um objeto do tipo PhoneState e um payload que ainda não possui um tipo definido
+// O tipo MutationsType, por padrão recebe um tipo genérico do tipo PhoneState, e retornará um objeto
+// que tem como chave, uma função chamada _setState, que aguarda receber um parâmetro onde sua chave exista no tipo PhoneState
+// sendo assim, PropName precisará ser phone | responsible ou phone_type_id, e o seu valor precisará ser
+// compatível com o tipo PhoneState[PropName]
 type MutationsType<S = PhoneState> = {
-    _setState(
+    // _setState espera que no payload, seja enviado no parâmetro PropName, uma chave compatível com o tipo Phone
+    // e Value, um tipo compatível com o tipo PhoneState[PropName]
+    _setState <PropName extends keyof Phone>(
         state: S,
-        payload: any
+
+        // Payload é um objeto que possui como contrato a interface PropNameKeyValue, que espera receber dois parâmetros:
+        // PropName: nome da chave do campo desejado
+        // ValueType, que será o valor atribuído ao campo desejado
+        payload: PropNameKeyValue<PropName, Phone[PropName]>
     ): void;
+}
+
+// A interface PropNameKeyValue, espera receber dois parâmetros:
+// PropName: nome da chave do campo desejado
+// ValueType, que será o valor atribuído ao campo desejado
+interface PropNameKeyValue<KeyType, ValueType> {
+    propName: KeyType;
+    value: ValueType;
 }
