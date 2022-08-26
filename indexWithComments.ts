@@ -38,25 +38,40 @@ interface PropNameKeyValue<KeyType, ValueType> {
 
 const actions: Actions = {
     setStateAction({commit}) {
+        // A função commit espera receber 2 parâmetros:
+        // O nome da mutação desejada (no caso abaixo, atribuído como MutationTypes.setState), que é um enum do tipo MutationTypes
+        // Um payload do tipo AllowedValues, que possui dois possíveis parâmetros
+        // // propName: o nome da propriedade que será alterada (que por enquanto permitirá apenas se o valor for 'phone')
+        // // value: o valor que será atribuído à propriedade, que por enquanto permitirá apenas se for do tipo number
+
+        // O commit abaixo funcionará porque o propName é 'phone', e o valor é do tipo número que são os tipos descritos no tipo AllowedValues
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
+
+        // O commit abaixo funcionará pois agora, o propName e o valor são descritos no tipo AllowedValues
+        commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
     }
 }
 
 interface Actions {
-    // A função setStateAction, possui um parâmetro com o nome de context
-    // o parâmetro context, espera receber um parâmetro com o nome de commit, que é uma das regras definidas no tipo ActionsContextParam
     setStateAction(context: ActionsContextParam): void;
 }
 
-// O tipo ActionsContextParam, é um objeto que possui uma função chamada commit
-// A função commit, espera receber dois parâmetros:
-// // Uma chave, que deverá ser uma constante do tipo MutationTypes, que é uma enumeração dos tipos de mutações
-// // Um payload, que por enquanto aceitará qualquer tipo de dado
-// No final, a função commit retornará um ReturnType que é o tipo de retorno da função commit
-// O ReturnType retorna o tipo de retorno de um tipo de função, que receberá como chave o tipo da mutação informada no parâmetro da função commit
 type ActionsContextParam = {
     commit<Key extends keyof MutationsType>(
         key: Key,
-        payload: any
+        // O payload espera receber um objeto que esteja nas opções do tipo AllowedValues
+        // Por enquanto, o payload permitirá receber apenas o propName 'phone', e o value do tipo number
+        payload: AllowedValues
     ): ReturnType<MutationsType[Key]>;
 };
+
+type AllowedValues = {
+    // Pequena alteração para permitir que o propName seja 'phone' ou 'responsible'
+    // Porém, não é o ideal, pois podemos ter inúmeros tipos de propriedades que podem ser alteradas
+    propName: 'phone' | 'responsible',
+
+    // Pequena alteração para permitir que o value seja do tipo number ou string
+    // Porém, não é o ideal, pois podemos ter inúmeros tipos de valores que podem ser atribuídos à propriedade
+    // e cada propriedade, possui seus próprios tipos de valores
+    value: number | string;
+}
