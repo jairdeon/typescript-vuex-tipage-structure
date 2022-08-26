@@ -1,3 +1,7 @@
+enum MutationTypes {
+    setState = "_setState"
+}
+
 export type Phone = {
     phone: boolean;
     responsible: string;
@@ -13,15 +17,14 @@ const state: PhoneState = {
 }
 
 const mutations: MutationsType = {
-    _setState(state, payload) {
+    [MutationTypes.setState](state, payload) {
         state.phone && (state.phone[payload.propName] = payload.value);
     }
 }
 
 type MutationsType<S = PhoneState> = {
-    _setState <PropName extends keyof Phone>(
+    _setState<PropName extends keyof Phone>(
         state: S,
-
         payload: PropNameKeyValue<PropName, Phone[PropName]>
     ): void;
 }
