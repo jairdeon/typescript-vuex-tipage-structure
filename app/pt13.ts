@@ -4,7 +4,7 @@ enum MutationTypes {
     setState = "_setState"
 }
 
-enum ActionTypes {
+export enum ActionTypes {
     setStateAction = "setStateAction"
 }
 
