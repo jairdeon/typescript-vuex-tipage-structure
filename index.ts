@@ -43,5 +43,12 @@ const actions: Actions = {
 }
 
 interface Actions {
-    setStateAction(context: any): void;
+    setStateAction(context: ActionsContextParam): void;
 }
+
+type ActionsContextParam = {
+    commit<Key extends keyof MutationsType>(
+        key: Key,
+        payload: any
+    ): ReturnType<MutationsType[Key]>;
+};
