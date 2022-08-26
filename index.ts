@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 enum MutationTypes {
     setState = "_setState"
 }
@@ -34,8 +36,12 @@ interface PropNameKeyValue<KeyType, ValueType> {
     value: ValueType;
 }
 
-const actions = {
-    setStateAction({commit}: any) {
-        commit('_setState', {propName: 'phone', value: 123456789});
+const actions: Actions = {
+    setStateAction({commit}) {
+        commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
     }
+}
+
+interface Actions {
+    setStateAction(context: any): void;
 }
