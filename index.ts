@@ -1,18 +1,24 @@
-export type State = {
-    test: boolean;
+export type Phone = {
+    phone: boolean;
+    responsible: string;
+    phone_type_id: number;
 }
 
-export const state: State = {
-    test: true
+type PhoneState = {
+    phone: Phone | null
+}
+
+const state: PhoneState = {
+    phone: null
 }
 
 const mutations: MutationsType = {
     _setState(state, payload) {
-        state.test = payload.value;
+        state.phone && (state.phone.responsible = payload.value);
     }
 }
 
-type MutationsType<S = State> = {
+type MutationsType<S = PhoneState> = {
     _setState(
         state: S,
         payload: any
