@@ -1,8 +1,8 @@
 // O enum MutationTypes, será utilizado para que ao chamar a constante mutations, seja possível atribuir de forma dinâmica
-// então utilizar [MutationTypes.setMetaProp] como nome da função, será o mesmo que chamar a função _setState
-// O tipo MutationType espera receber uma função com o nome _setState, e ao utilizar o enum MutationTypes.setMetaProp, será identificado como _setState, então será válido
+// então utilizar [MutationTypes.setState] como nome da função, será o mesmo que chamar a função _setState
+// O tipo MutationType espera receber uma função com o nome _setState, e ao utilizar o enum MutationTypes.setState, será identificado como _setState, então será válido
 enum MutationTypes {
-    setMetaProp = "_setState"
+    setState = "_setState"
 }
 
 export type Phone = {
@@ -20,7 +20,7 @@ const state: PhoneState = {
 }
 
 const mutations: MutationsType = {
-    [MutationTypes.setMetaProp](state, payload) {
+    [MutationTypes.setState](state, payload) {
         state.phone && (state.phone[payload.propName] = payload.value);
     }
 }
