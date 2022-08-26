@@ -39,6 +39,7 @@ interface PropNameKeyValue<KeyType, ValueType> {
 const actions: Actions = {
     setStateAction({commit}) {
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
+        commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
     }
 }
 
@@ -49,6 +50,12 @@ interface Actions {
 type ActionsContextParam = {
     commit<Key extends keyof MutationsType>(
         key: Key,
-        payload: any
+        payload: AllowedValues
     ): ReturnType<MutationsType[Key]>;
 };
+
+type AllowedValues = {
+    propName: 'phone' | 'responsible',
+
+    value: number | string;
+}
