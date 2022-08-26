@@ -36,23 +36,27 @@ interface PropNameKeyValue<KeyType, ValueType> {
     value: ValueType;
 }
 
-// A constante actions, retornará um objeto do tipo Actions
-// Não foi necessário atribuir o tipo do parâmetro da função setStateAction, pois na interface Actions, por enquanto
-// foi definido que seu contexto é do tipo any, então ele espera receber qualquer parâmetro
-// A interface Actions em seu parâmetro context, será responsável por dizer quais os possíveis parâmetros que podem ser passados para a função setStateAction
-// A função commit, por padrão, será acessada por meio do enum MutationTypes, que possui os nomes dos mutations disponíveis
-// neste caso, o commit estará acessando a mutation '_setState'
 const actions: Actions = {
-    // A função setStateAction, receberá um ou mais parâmetros compatíveis com o contexto do Actions
-    // O parâmetro context em sua interface, por enquanto espera receber qualquer parâmetro
-    // Sendo assim, seria possível por enquanto enviar qualquer tipo de parâmetro nesta desestruturação
     setStateAction({commit}) {
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
     }
 }
 
-// A interface Actions, dita as regras e retornos esperados para a constante actions
 interface Actions {
-    // A função setStateAction, receberá um parâmetro do tipo context, que por enquanto espera receber qualquer tipo de parâmetro
-    setStateAction(context: any): void;
+    // A função setStateAction, possui um parâmetro com o nome de context
+    // o parâmetro context, espera receber um parâmetro com o nome de commit, que é uma das regras definidas no tipo ActionsContextParam
+    setStateAction(context: ActionsContextParam): void;
 }
+
+// O tipo ActionsContextParam, é um objeto que possui uma função chamada commit
+// A função commit, espera receber dois parâmetros:
+// // Uma chave, que deverá ser uma constante do tipo MutationTypes, que é uma enumeração dos tipos de mutações
+// // Um payload, que por enquanto aceitará qualquer tipo de dado
+// No final, a função commit retornará um ReturnType que é o tipo de retorno da função commit
+// O ReturnType retorna o tipo de retorno de um tipo de função, que receberá como chave o tipo da mutação informada no parâmetro da função commit
+type ActionsContextParam = {
+    commit<Key extends keyof MutationsType>(
+        key: Key,
+        payload: any
+    ): ReturnType<MutationsType[Key]>;
+};
