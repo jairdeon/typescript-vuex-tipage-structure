@@ -4,7 +4,11 @@ enum MutationTypes {
     setState = "_setState"
 }
 
-export type Phone = {
+export enum ActionTypes {
+    setStateAction = "setStateAction"
+}
+
+type Phone = {
     phone: number;
     responsible: string;
     phone_type_id: number;
@@ -15,7 +19,11 @@ type PhoneState = {
 }
 
 const state: PhoneState = {
-    phone: null
+    phone: {
+        phone: 999999999,
+        responsible: "Jair Deon",
+        phone_type_id: 1
+    }
 }
 
 const mutations: MutationsType = {
@@ -37,7 +45,7 @@ interface PropNameKeyValue<KeyType, ValueType> {
 }
 
 const actions: Actions = {
-    setStateAction({commit}) {
+    [ActionTypes.setStateAction]({commit}) {
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
         commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
         commit(MutationTypes.setState, {propName: 'phone_type_id', value: 1});
