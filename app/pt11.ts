@@ -47,8 +47,7 @@ const actions: Actions = {
         // O commit abaixo funcionará porque o propName é 'phone', e o valor é do tipo número que são os tipos descritos no tipo AllowedValues
         commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
 
-        // O commit abaixo não funcionará, pois o parâmetro fornecido por propName, não é uma opção válida para o tipo AllowedValues
-        // e o valor fornecido por value não é do tipo number
+        // O commit abaixo funcionará pois agora, o propName e o valor são descritos no tipo AllowedValues
         commit(MutationTypes.setState, {propName: 'responsible', value: 'Jair Deon'});
     }
 }
@@ -67,6 +66,12 @@ type ActionsContextParam = {
 };
 
 type AllowedValues = {
-    propName: 'phone',
-    value: number;
+    // Pequena alteração para permitir que o propName seja 'phone' ou 'responsible'
+    // Porém, não é o ideal, pois podemos ter inúmeros tipos de propriedades que podem ser alteradas
+    propName: 'phone' | 'responsible',
+
+    // Pequena alteração para permitir que o value seja do tipo number ou string
+    // Porém, não é o ideal, pois podemos ter inúmeros tipos de valores que podem ser atribuídos à propriedade
+    // e cada propriedade, possui seus próprios tipos de valores
+    value: number | string;
 }
