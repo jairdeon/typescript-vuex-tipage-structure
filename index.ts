@@ -6,14 +6,15 @@ export const state: State = {
     test: true
 }
 
-function  _setState<T, K extends keyof T>(state: T, key: K, value: T[K]){
-    state[key] = value;
+const mutations: MutationsType = {
+    _setState(state, payload) {
+        state.test = payload.value;
+    }
 }
 
-_setState(state, 'test', true);
-
-function actionState<T, K extends keyof T>(state: T, key: K, value: T[K]) {
-    _setState(state, key, value);
+type MutationsType<S = State> = {
+    _setState(
+        state: S,
+        payload: any
+    ): void;
 }
-
-actionState(state, 'test', true);
