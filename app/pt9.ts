@@ -4,7 +4,7 @@ enum MutationTypes {
     setState = "_setState"
 }
 
-type Phone = {
+export type Phone = {
     phone: number;
     responsible: string;
     phone_type_id: number;
@@ -47,7 +47,7 @@ const actions: Actions = {
     // O parâmetro context em sua interface, por enquanto espera receber qualquer parâmetro
     // Sendo assim, seria possível por enquanto enviar qualquer tipo de parâmetro nesta desestruturação
     setStateAction({commit}) {
-        commit([MutationTypes.setState], {propName: 'phone', value: 123456789});
+        commit(MutationTypes.setState, {propName: 'phone', value: 123456789});
     }
 }
 
